@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pandamama.a01_coolweather.MainActivity;
 import com.pandamama.a01_coolweather.R;
 import com.pandamama.a01_coolweather.WeatherActivity;
 import com.pandamama.a01_coolweather.db.City;
@@ -121,11 +122,26 @@ public class ChooseAreaFragment extends Fragment {
                 } else if (currentLevel == LEVEL_COUNTY) {
 
                     String weatherId = countyList.get(position).getWeatherId();
-                    Intent intent = new Intent(getActivity(), WeatherActivity.class);
-                    intent.putExtra("weather_id", weatherId);
-                    startActivity(intent);
 
-                    getActivity().finish();
+                    /*
+                    调用 getActivity() 方法，配合 instanceof 关键字，轻松判断出碎片是在 MainActivity 当中，
+                    还是在 WeatherActivity 当中。如果是在 MainActivity 当中，处理逻辑不变。如果是在 WeatherActivity
+                    当中，就关闭滑动菜单，显示下拉刷新进度条，然后请求新城市的天气信息
+                     */
+                    if (getActivity() instanceof MainActivity) {
+
+                        Intent intent = new Intent(getActivity(), WeatherActivity.class);
+                        intent.putExtra("weather_id", weatherId);
+                        startActivity(intent);
+
+                        getActivity().finish();
+                    } else if (getActivity() instanceof WeatherActivity) {
+
+                        WeatherActivity activity = (WeatherActivity) getActivity();
+                        activity.drawerLayout.closeDrawers();
+                        activity.swipeRefresh.setRefreshing(true);
+                        activity.requestWeather(weatherId);
+                    }
                 }
             }
         });

@@ -6,45 +6,69 @@
 
     <!--FrameLayout 默认情况下会将控件都放置在左上角，因此 ScrollView
     会完全覆盖住 ImageView，从而 ImageView 也就成为背景图片了-->
-
     <ImageView
         android:id="@+id/bing_pic_img"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop" />
 
-
-    <!--ScrollView 的内部只允许存在一个直接子布局-->
-
-    <ScrollView
-        android:id="@+id/weather_layout"
+    <!--
+    在 SwipeRefreshLayout 的外面又嵌套了一层 DrawerLayout，DrawerLayout
+    中的第一个子控件用于作为主屏幕中显示的内容，第二个子控件用于作为滑动菜单
+    中显示的呢绒，在第二个子控件的位置添加用于变量省市县数据的碎片
+    -->
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:overScrollMode="never"
-        android:scrollbars="none">
+        android:layout_height="match_parent">
 
-
-        <!--增加 android:fitsSystemWindows 属性，设置 true
-        表示为系统状态栏留出空间-->
-        <LinearLayout
+        <!--在 ScrollView 的外面又嵌套了一层 SwipeRefreshLayout，这样
+        ScrollView 就自动拥有下拉刷新功能了-->
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:layout_height="match_parent">
 
-            android:fitsSystemWindows="true"
+            <!--ScrollView 的内部只允许存在一个直接子布局-->
+            <ScrollView
+                android:id="@+id/weather_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never"
+                android:scrollbars="none">
 
-            >
 
-            <include layout="@layout/title" />
+                <!--增加 android:fitsSystemWindows 属性，设置 true
+                表示为系统状态栏留出空间-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fitsSystemWindows="true"
 
-            <include layout="@layout/now" />
+                    android:orientation="vertical"
 
-            <include layout="@layout/forecast" />
+                    >
 
-            <include layout="@layout/aqi" />
+                    <include layout="@layout/title" />
 
-            <include layout="@layout/suggestion" />
+                    <include layout="@layout/now" />
 
-        </LinearLayout>
-    </ScrollView>
+                    <include layout="@layout/forecast" />
+
+                    <include layout="@layout/aqi" />
+
+                    <include layout="@layout/suggestion" />
+
+                </LinearLayout>
+            </ScrollView>
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+        <fragment
+            android:id="@+id/choose_area_fragment"
+            android:name="com.pandamama.a01_coolweather.fragment.ChooseAreaFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="start" />
+    </android.support.v4.widget.DrawerLayout>
+
 </FrameLayout>
