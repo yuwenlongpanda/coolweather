@@ -1,6 +1,7 @@
 package com.pandamama.a01_coolweather.fragment;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pandamama.a01_coolweather.R;
+import com.pandamama.a01_coolweather.WeatherActivity;
 import com.pandamama.a01_coolweather.db.City;
 import com.pandamama.a01_coolweather.db.County;
 import com.pandamama.a01_coolweather.db.Province;
@@ -112,6 +114,18 @@ public class ChooseAreaFragment extends Fragment {
                 } else if (currentLevel == LEVEL_CITY) {
                     selectedCity = cityList.get(position);
                     queryCounties();
+
+                    /*
+                    如果当前级别是 LEVEL_COUNTY，就启动 WeatherAvtivity，并把当前选中县的 id 传递过去
+                     */
+                } else if (currentLevel == LEVEL_COUNTY) {
+
+                    String weatherId = countyList.get(position).getWeatherId();
+                    Intent intent = new Intent(getActivity(), WeatherActivity.class);
+                    intent.putExtra("weather_id", weatherId);
+                    startActivity(intent);
+
+                    getActivity().finish();
                 }
             }
         });

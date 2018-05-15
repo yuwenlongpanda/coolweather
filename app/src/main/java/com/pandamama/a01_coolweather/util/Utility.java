@@ -2,9 +2,11 @@ package com.pandamama.a01_coolweather.util;
 
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
 import com.pandamama.a01_coolweather.db.City;
 import com.pandamama.a01_coolweather.db.County;
 import com.pandamama.a01_coolweather.db.Province;
+import com.pandamama.a01_coolweather.gson.Weather;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -93,4 +95,52 @@ public class Utility {
         }
         return false;
     }
+
+    /*
+    将返回的 JSON 数据解析成 Weather 实体类
+     */
+    public static Weather handleWeatherResponse(String response) {
+
+        try {
+            /*
+            通过 JSONObject 和 JSONArray 将天气数据中的主体内容解析出来
+             */
+            JSONObject jsonObject = new JSONObject(response);
+            JSONArray jsonArray = jsonObject.getJSONArray("HeWeather");
+            String weatherContent = jsonArray.getJSONObject(0).toString();
+
+            /*
+            调用 fromJson() 方法直接将 JSON 数据转换成 Weather 对象
+             */
+            Weather weather = new Gson().fromJson(weatherContent, Weather.class);
+
+            return weather;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
